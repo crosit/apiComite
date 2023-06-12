@@ -35,18 +35,28 @@ router.post('/',
 router.get('/:filename',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    console.log(req.params, 'asd');
-    const filename = req.params.filename;
-    const filePath = 'public/documentos/' + filename;
-  
-    // Envía el archivo como respuesta
-    res.download(filePath, (error) => {
-      if (error) {
-        // Manejo de errores en caso de que el archivo no se pueda descargar
-        console.error('Error al descargar el archivo:', error);
-        res.status(500).send('Error al descargar el archivo');
-      }
-    });
+    try {
+        
+        console.log(req.params, 'asd');
+        const filename = req.params.filename;
+        const filePath = 'public/documentos/' + filename;
+      
+        // Envía el archivo como respuesta
+        res.download(filePath, (error) => {
+          if (error) {
+            // Manejo de errores en caso de que el archivo no se pueda descargar
+            console.error('Error al descargar el archivo:', error);
+            res.status(500).send('Error al descargar el archivo');
+          }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500), res.send({
+            status:500,
+            data:{},
+            message:'Error al subir el archivo'
+        }); 
+    }
   })
   
 
