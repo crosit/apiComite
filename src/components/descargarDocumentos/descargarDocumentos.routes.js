@@ -1,30 +1,53 @@
 const express = require('express');
 const upload = require('../../middleware/multer.middleware');
+const passport = require('passport');
 
 const router = express.Router();
 const URL = '/servidorDocumentos'
 
 
-router.post('/', 
+router.post('/',
+    passport.authenticate('jwt', { session: false }),
     upload.single('documento'),
     async (req, res) => {
-        res.status(200), res.send({message:req.file});
+        try {
+
+            res.status(200), res.send({
+                status:200,
+                data:{
+                    nombre:req.file.originalname,
+                    url:req.file.filename,
+                },
+                message:'ok'
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500), res.send({
+                status:500,
+                data:{},
+                message:'Error al subir el archivo'
+            });
+        }
   });
 
-//   router.post('/login', async (req, res,next) => {
-//     passport.authenticate('local', { session: false }, (err, user, info) => {
-//       try {
-//         if (err || !user) {
-//           return res.status(401).json({ message: info });
-//         }
-//         const token = jwtUtils.generateToken(user);
+
+
+router.get('/:filename',
+passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    console.log(req.params, 'asd');
+    const filename = req.params.filename;
+    const filePath = 'public/documentos/' + filename;
   
-//         return res.json({ token });
-//       } catch (error) {
-//         return next(error);
-//       }
-//     })(req, res, next);
-//   });
+    // Envía el archivo como respuesta
+    res.download(filePath, (error) => {
+      if (error) {
+        // Manejo de errores en caso de que el archivo no se pueda descargar
+        console.error('Error al descargar el archivo:', error);
+        res.status(500).send('Error al descargar el archivo');
+      }
+    });
+  })
   
 
   
