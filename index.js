@@ -4,6 +4,7 @@ const passport = require('passport');
 const initializePassport = require('./src/config/passport.config');
 const jwt = require('jsonwebtoken');
 const config = require('./src/config/config');
+const cors = require('cors');
 
 
 
@@ -11,6 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(passport.initialize());
+app.use(cors());
 
 // Configurar el middleware Passport
 initializePassport(passport);

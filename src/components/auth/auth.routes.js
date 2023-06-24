@@ -19,8 +19,19 @@ router.post('/register', async (req, res) => {
           return res.status(401).json({ message: info });
         }
         const token = jwtUtils.generateToken(user);
+        let user2 = {
+          id: user[0].id,
+          nombre: user[0].nombre,
+          apellido_p: user[0].apellido_p,
+          apellido_m: user[0].apellido_m,
+          correo_escolar: user[0].correo_escolar,
+          gefe_carrera: user[0].gefe_carrera,
+          tipos_id: user[0].tipos_id,
+          
+        }        
+        console.log(user2, 'user');
   
-        return res.json({ token });
+        return res.json({ token, user: user2 });
       } catch (error) {
         return next(error);
       }

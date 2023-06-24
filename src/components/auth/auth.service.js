@@ -1,11 +1,11 @@
 const connection = require('../../helper/db.helper');
 const {hashPassword, comparePassword} = require('../../helper/bcrypt.helper');
-const {getOneUser,postUsuarios} = require('./auth.repository');
+const {getByEmailUser,postUsuarios} = require('./auth.repository');
 const service = {
     getService: async(data) => {
         try {
             // Example database query
-            let usuarios = await getOneUser(data.correo_escolar);
+            let usuarios = await getByEmailUser(data.correo_escolar);
             if (usuarios.length > 0) {
                 return {
                     status: 400,

@@ -3,7 +3,10 @@ const connection = require('../../helper/db.helper');
 getByEmailUser = async(correo) => {
     // console.log(correo, 'correo');
     let data = await connection().then( async(conn) => {
-        const usuarios = await conn.execute('SELECT * FROM usuarios WHERE deletedAt IS NULL AND correo_escolar = ?', [correo]);
+        const usuarios = await conn.execute(`SELECT u.*,c.descripcion as carrera_descripcion FROM usuarios as u
+        INNER JOIN carreras as c
+        ON  u.carreras_id = c.id
+        WHERE u.deletedAt IS NULL AND u.correo_escolar = ?`, [correo]);
         
         return usuarios[0];
       });
