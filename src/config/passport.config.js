@@ -17,8 +17,7 @@ function initializePassport(passport) {
       try {
         const user = await getByEmailUser( email );
         
-
-        if (!user) {
+        if (user.length === 0) {
           return done(null, false, { message: 'Usuario no encontrado' });
         }
         const isMatch = await bcrypt.compare(password, user[0].contrasena);

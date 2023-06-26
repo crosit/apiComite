@@ -1,9 +1,9 @@
 const {getAllRepository,getByIdRepository,postRepository,putRepository,deletedRepository} = require('./usuarios.repository');
 const service = {
-    getAllService: async() => {
+    getAllService: async(filters) => {
         try {
             // Example database query
-            let usuarios = await getAllRepository();
+            let usuarios = await getAllRepository(filters);
             
             return {
                 status: 200,
@@ -55,10 +55,10 @@ const service = {
                 console.log(error, 'error'); 
             }
     },
-    putService: async(data) => {
+    putService: async(data,id) => {
         try {
             // Example database query
-            let usuarios = await putRepository(data);
+            let usuarios = await putRepository(data,id);
            
             return {
                 status: 200,

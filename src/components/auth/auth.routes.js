@@ -16,7 +16,8 @@ router.post('/register', async (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {
       try {
         if (err || !user) {
-          return res.status(401).json({ message: info });
+          console.log(user, 'err');
+          return res.status(401).json({ message: 'credenciales incorrectas' });
         }
         const token = jwtUtils.generateToken(user);
         let user2 = {
