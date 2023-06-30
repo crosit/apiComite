@@ -22,7 +22,7 @@ getByIdRepository = async(id) => {
         return data;
 }
 
-postRepository = async(data) => {
+postRepositoryUS = async(data) => {
     let response = await connection().then( async(conn) => {
       let query = `INSERT INTO ${TABLE} (usuarios_id,solicitudes_id) VALUES (?,?)`
 
@@ -73,4 +73,4 @@ deletedRepository = async(data) => {
    return response;
 }
 
-module.exports = {getAllRepository, getByIdRepository, postRepository, putRepository, deletedRepository};
+module.exports = {getAllRepository, getByIdRepository, postRepositoryUS, putRepository, deletedRepository};

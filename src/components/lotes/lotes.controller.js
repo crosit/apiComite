@@ -1,8 +1,8 @@
 const service = require('./lotes.service');
 
 const controller = {
-    getAllController: () => {
-        const data = service.getAllService();
+    getAllController: (filters) => {
+        const data = service.getAllService(filters);
         return data;
     },
     getOneController: (id) => {
@@ -13,8 +13,8 @@ const controller = {
         const data = service.postService(req);
         return data;
     },
-    putController: (req) => {
-        const data = service.putService(req);
+    putController: (req,id) => {
+        const data = service.putService(req,id);
         return data;
     },
     deletedController: (req) => {

@@ -13,7 +13,7 @@ passport.authenticate('jwt', { session: false }),
   }
 );
   
-router.get('/:id',
+router.get('/:id', 
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const response = await controller.getOneController(req.params.id);

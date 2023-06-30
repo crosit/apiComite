@@ -10,7 +10,7 @@ router.get('/',
   passport.authenticate('jwt', { session: false }),
   validacionAdmin,
   async (req, res) => {
-    const response = await controller.getAllController(req.body);
+    const response = await controller.getAllController(req.query);
     res.status(response.status), res.send(response);
   }
 );
@@ -34,11 +34,11 @@ router.post('/',
   }
 );
 
-router.put('/',
+router.put('/:id',
   passport.authenticate('jwt', { session: false }),
   validacionAdmin,
   async (req, res) => {
-    const response = await controller.putController(req.body);
+    const response = await controller.putController(req.body, req.params.id);
     console.log(response);
     res.status(response.status), res.send(response);
   }

@@ -9,8 +9,8 @@ const controller = {
         const data = service.getOneService(id);
         return data;
     },
-    postController: (req) => {
-        const data = service.postService(req);
+    postController: (req,user) => {
+        const data = service.postService(req,user);
         return data;
     },
     putController: (req) => {

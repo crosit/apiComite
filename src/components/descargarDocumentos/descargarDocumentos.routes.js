@@ -11,7 +11,7 @@ router.post('/',
     upload.single('documento'),
     async (req, res) => {
         try {
-
+            console.log(req.file, 'file');
             res.status(200), res.send({
                 status:200,
                 data:{

@@ -24,8 +24,9 @@ passport.authenticate('jwt', { session: false }),
 router.post('/',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const response = await controller.postController(req.body);
-    console.log(response);
+    // console.log(req.user[0].id);
+    const response = await controller.postController(req.body,req.user[0].id);
+    // console.log(response);
     res.status(response.status), res.send(response);
   }
 );
@@ -34,7 +35,7 @@ router.put('/',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const response = await controller.putController(req.body);
-    console.log(response);
+    // console.log(response);
     res.status(response.status), res.send(response);
   }
 );
@@ -43,7 +44,7 @@ router.delete('/:id',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const response = await controller.deletedController(req.params.id);
-    console.log(response);
+    // console.log(response);
     res.status(response.status), res.send(response);
   }
 );

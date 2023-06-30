@@ -1,4 +1,4 @@
-const {getAllRepository,getByIdRepository,postRepository,putRepository,deletedRepository} = require('./documentos.repository');
+const {getAllRepository,getByIdRepository,postRepositoryDocument,putRepository,deletedRepository} = require('./documentos.repository');
 const service = {
     getAllService: async() => {
         try {
@@ -45,7 +45,7 @@ const service = {
     postService: async(data) => {
         try {
             // Example database query
-            let usuarios = await postRepository(data);
+            let usuarios = await postRepositoryDocument(data);
             
             return {
                 status: 200,
