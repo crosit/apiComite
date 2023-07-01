@@ -1,9 +1,9 @@
 const {getAllRepository2,getByIdRepository,postRepository,putRepository,deletedRepository} = require('./solicitudes.repository');
 const service = {
-    getAllService: async() => {
+    getAllService: async(id) => {
         try {
             // Example database query
-            let usuarios = await getAllRepository2();
+            let usuarios = await getAllRepository2(id);
             
             return {
                 status: 200,

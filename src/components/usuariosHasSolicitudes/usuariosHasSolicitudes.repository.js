@@ -35,6 +35,7 @@ postRepositoryUS = async(data) => {
         return response;
 }
 
+
 putRepository = async(data) => {
    // Consulta de actualización
    const query = `
@@ -73,4 +74,4 @@ deletedRepository = async(data) => {
    return response;
 }
 
-module.exports = {getAllRepository, getByIdRepository, postRepositoryUS, putRepository, deletedRepository};
+module.exports = {getAllRepository, getByIdRepository,postRepositoryUS, putRepository, deletedRepository};

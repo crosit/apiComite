@@ -1,8 +1,8 @@
 const service = require('./solicitudes.service');
 
 const controller = {
-    getAllController: () => {
-        const data = service.getAllService();
+    getAllController: (id) => {
+        const data = service.getAllService(id);
         return data;
     },
     getOneController: (id) => {

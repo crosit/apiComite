@@ -152,4 +152,47 @@ deletedRepository = async (data) => {
   return response;
 }
 
-module.exports = { getAllRepository, getByIdRepository, postRepository, putRepository, deletedRepository };
+validacionGefeCarrera = async(id,carreraId) => {
+  let query = `
+  SELECT u.*, 
+    t.descripcion as tipo_descripcion,
+    c.descripcion as carrera_descripcion
+  FROM ${TABLE} as u 
+  INNER JOIN tipos as t
+  ON u.tipos_id = t.id
+  INNER JOIN carreras as c
+  ON u.carreras_id = c.id
+  WHERE 
+  u.gefe_carrera = 1 AND u.carreras_id = ${carreraId} AND u.deletedAt IS NULL
+  ORDER BY u.createdAt desc
+  `
+  // console.log(query, 'query');
+  let data = await connection().then(async (conn) => {
+    const usuarios = await conn.execute(query);
+    return usuarios[0];
+  });
+  console.log(data, 'data');
+  return data;
+}
+validacionComite = async(id,carreraId) => {
+  let query = `
+  SELECT u.*, 
+    t.descripcion as tipo_descripcion,
+    c.descripcion as carrera_descripcion
+  FROM ${TABLE} as u 
+  INNER JOIN tipos as t
+  ON u.tipos_id = t.id
+  INNER JOIN carreras as c
+  ON u.carreras_id = c.id
+  WHERE 
+  u.tipos_id = 2 AND u.deletedAt IS NULL
+  `
+  // console.log(query, 'query');
+  let data = await connection().then(async (conn) => {
+    const usuarios = await conn.execute(query);
+    return usuarios[0];
+  });
+  console.log(data, 'data');
+  return data;
+}
+module.exports = { getAllRepository, getByIdRepository, validacionGefeCarrera,postRepository, putRepository, deletedRepository };

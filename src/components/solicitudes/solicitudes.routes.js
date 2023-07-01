@@ -8,7 +8,7 @@ const URL = '/solicitudes'
 router.get('/',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const response = await controller.getAllController(req.body);
+    const response = await controller.getAllController(req.user[0].id);
     res.status(response.status), res.send(response);
   }
 );
@@ -25,7 +25,7 @@ router.post('/',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     // console.log(req.user[0].id);
-    const response = await controller.postController(req.body,req.user[0].id);
+    const response = await controller.postController(req.body,req.user);
     // console.log(response);
     res.status(response.status), res.send(response);
   }

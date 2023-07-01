@@ -1,10 +1,12 @@
 const getToday = require('../../helper/date.helper');
 const connection = require('../../helper/db.helper');
+const {postRepositoryUS} = require('../usuariosHasSolicitudes/usuariosHasSolicitudes.repository');
 const { postRepositoryDocument } = require('../documentos/documentos.repository');
-const {getAllRepository} = require('../lotes/lotes.repository')
+const {getAllRepository} = require('../lotes/lotes.repository');
+const { validacionGefeCarrera } = require('../usuarios/usuarios.repository');
 const TABLE = 'solicitudes';
 
-getAllRepository2 = async() => {
+getAllRepository2 = async(id) => {
     let data = await connection().then( async(conn) => {
         const usuarios = await conn.execute(`SELECT 
         CONCAT(u.nombre,
@@ -39,7 +41,7 @@ getAllRepository2 = async() => {
         lotes AS l ON l.id = s.lotes_id
     WHERE
         u.deletedAt IS NULL
-      AND s.deletedAt IS NULL
+      AND s.deletedAt IS NULL AND u.id = ${id}
     ; `);
         
         return usuarios[0];
@@ -77,15 +79,24 @@ postRepository = async(data, user) => {
       });
     data.solicitudes_id = response.insertId;
     let userSolicitud = {
-      usuarios_id: user,
+      usuarios_id: user[0].id,
       solicitudes_id: response.insertId
     }
     // console.log(userSolicitud, 'userSolicitud');
     postRepositoryUS(userSolicitud);
     postRepositoryDocument(data);
-      // console.log(response, 'response');
-        return response;
+    let usuario = await validacionGefeCarrera(response.insertId,user[0].carreras_id);
+    console.log(usuario, 'usuario');
+    let gefeSolicitud = {
+      usuarios_id: usuario[0].id,
+      solicitudes_id: response.insertId
+    }
+    postRepositoryUS(gefeSolicitud);
+    console.log(response, 'response');
+    return response;
 }
+
+
 
 putRepository = async(data) => {
    // Consulta de actualización
