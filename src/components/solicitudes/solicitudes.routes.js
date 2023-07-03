@@ -16,7 +16,29 @@ passport.authenticate('jwt', { session: false }),
 router.get('/:id',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const response = await controller.getOneController(req.params.id);
+    const response = await controller.getOneController(req.user[0], req.params.id);
+    res.status(response.status), res.send(response);
+  }
+);
+
+router.post('/aceptadoComite',
+passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const response = await controller.aceptadoComiteController(req.body);
+    res.status(response.status), res.send(response);
+  }
+);
+router.post('/aceptadoAdministracion',
+passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const response = await controller.aceptadoAdministracionController(req.body);
+    res.status(response.status), res.send(response);
+  }
+);
+router.post('/aceptadoFinalizar',
+passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const response = await controller.aceptadoFinalizarController(req.body);
     res.status(response.status), res.send(response);
   }
 );
@@ -48,6 +70,7 @@ passport.authenticate('jwt', { session: false }),
     res.status(response.status), res.send(response);
   }
 );
+
   
   module.exports = (app) => {
     app.use(URL, router);

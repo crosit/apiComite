@@ -1,4 +1,4 @@
-const connection = require('../../helper/db.helper');
+const {connection,closeConnection} = require('../../helper/db.helper');
 const {hashPassword, comparePassword} = require('../../helper/bcrypt.helper');
 const {getByEmailUser,postUsuarios} = require('./auth.repository');
 const service = {
@@ -16,7 +16,6 @@ const service = {
             let encryptPass = await hashPassword(data.contrasena);
 
             let newUser = await postUsuarios(data, encryptPass);
-            console.log(newUser, 'newUser');
             return {
                 status: 200,
                 data: newUser,

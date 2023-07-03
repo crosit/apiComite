@@ -1,6 +1,6 @@
 const { hashPassword } = require('../../helper/bcrypt.helper');
 const getToday = require('../../helper/date.helper');
-const connection = require('../../helper/db.helper');
+const {connection,closeConnection} = require('../../helper/db.helper');
 const service = require('../auth/auth.service');
 
 const TABLE = 'usuarios';
@@ -47,13 +47,15 @@ getAllRepository = async (filters) => {
   // console.log(query, 'query');
   let data = await connection().then(async (conn) => {
     const usuarios = await conn.execute(query);
+    closeConnection(conn);
     return usuarios[0];
   });
+  
   return data;
 }
 
 getByIdRepository = async (id) => {
-  console.log(id, 'id');
+  // console.log(id, 'id');
   let data = await connection().then(async (conn) => {
     const usuarios = await conn.execute(`SELECT nombre,
     apellido_p,
@@ -65,6 +67,7 @@ getByIdRepository = async (id) => {
     tipos_id,
     gefe_carrera FROM ${TABLE} WHERE deletedAt IS NULL AND id = ?`, [id]);
     // console.log( usuarios[0]);
+    closeConnection(conn);
     return usuarios[0];
   });
   return data;
@@ -99,6 +102,7 @@ putRepository = async (data,id) => {
       const values = [encryptPass];
       let response = await connection().then(async (conn) => {
         const usuarios = await conn.execute(query, values);
+        closeConnection(conn);
         return usuarios[0];
       });
 
@@ -125,6 +129,7 @@ putRepository = async (data,id) => {
   
     let response = await connection().then(async (conn) => {
       const usuarios = await conn.execute(query, values);
+      closeConnection(conn);
       return usuarios[0];
     });
     //  console.log(response, 'response');
@@ -146,12 +151,29 @@ deletedRepository = async (data) => {
 
   let response = await connection().then(async (conn) => {
     const usuarios = await conn.execute(query);
+    closeConnection(conn);
     return usuarios[0];
   });
   //  console.log(response, 'response');
   return response;
 }
-
+validacionAdministracion = async() => {
+  let query = `
+  SELECT u.id 
+  FROM ${TABLE} as u 
+  
+  WHERE 
+  u.tipos_id = 1 AND u.gefe_carrera = 0 AND u.deletedAt IS NULL
+  `
+  // console.log(query, 'query');
+  let data = await connection().then(async (conn) => {
+    const usuarios = await conn.execute(query);
+    closeConnection(conn);
+    return usuarios[0];
+  });
+  // console.log(data, 'data');
+  return data;
+}
 validacionGefeCarrera = async(id,carreraId) => {
   let query = `
   SELECT u.*, 
@@ -169,30 +191,27 @@ validacionGefeCarrera = async(id,carreraId) => {
   // console.log(query, 'query');
   let data = await connection().then(async (conn) => {
     const usuarios = await conn.execute(query);
+    closeConnection(conn);
     return usuarios[0];
   });
-  console.log(data, 'data');
+  // console.log(data, 'data');
   return data;
 }
-validacionComite = async(id,carreraId) => {
+validacionComite = async() => {
   let query = `
-  SELECT u.*, 
-    t.descripcion as tipo_descripcion,
-    c.descripcion as carrera_descripcion
+  SELECT u.id 
   FROM ${TABLE} as u 
-  INNER JOIN tipos as t
-  ON u.tipos_id = t.id
-  INNER JOIN carreras as c
-  ON u.carreras_id = c.id
+  
   WHERE 
-  u.tipos_id = 2 AND u.deletedAt IS NULL
+  u.tipos_id = 2 AND u.gefe_carrera = 0 AND u.deletedAt IS NULL
   `
   // console.log(query, 'query');
   let data = await connection().then(async (conn) => {
     const usuarios = await conn.execute(query);
+    closeConnection(conn);
     return usuarios[0];
   });
-  console.log(data, 'data');
+  // console.log(data, 'data');
   return data;
 }
-module.exports = { getAllRepository, getByIdRepository, validacionGefeCarrera,postRepository, putRepository, deletedRepository };
+module.exports = { getAllRepository, getByIdRepository, validacionAdministracion, validacionComite, validacionGefeCarrera,postRepository, putRepository, deletedRepository };

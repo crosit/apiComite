@@ -37,7 +37,6 @@ passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
         
-        console.log(req.params, 'asd');
         const filename = req.params.filename;
         const filePath = 'public/documentos/' + filename;
       

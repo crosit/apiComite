@@ -29,6 +29,7 @@ require('./src/components/solicitudes/solicitudes.routes')(app);
 require('./src/components/documentos/documentos.routes')(app);
 require('./src/components/usuariosHasSolicitudes/usuariosHasSolicitudes.routes')(app);
 require('./src/components/descargarDocumentos/descargarDocumentos.routes')(app);
+require('./src/components/sedEmail/sendEmail')(app);
 
 
 

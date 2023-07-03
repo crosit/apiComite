@@ -1,12 +1,24 @@
 const service = require('./solicitudes.service');
 
 const controller = {
+    aceptadoComiteController: (req) => {
+        const data = service.aceptadoComiteService(req);
+        return data;
+    },
+    aceptadoAdministracionController: (req) => {
+        const data = service.aceptadoAdministracionService(req);
+        return data;
+    },
+    aceptadoFinalizarController: (req) => {
+        const data = service.aceptadoFinalizarService(req);
+        return data;
+    },
     getAllController: (id) => {
         const data = service.getAllService(id);
         return data;
     },
-    getOneController: (id) => {
-        const data = service.getOneService(id);
+    getOneController: (usuario,solicitante) => {
+        const data = service.getOneService(usuario,solicitante);
         return data;
     },
     postController: (req,user) => {

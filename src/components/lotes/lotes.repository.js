@@ -1,5 +1,5 @@
 const getToday = require('../../helper/date.helper');
-const connection = require('../../helper/db.helper');
+const {connection,closeConnection} = require('../../helper/db.helper');
 
 const TABLE = 'lotes';
 
@@ -12,7 +12,7 @@ getAllRepository = async (filtros) => {
 
   let data = await connection().then(async (conn) => {
     const lotes = await conn.execute(`SELECT * FROM ${TABLE} WHERE deletedAt IS NULL `);
-
+    closeConnection(conn);
     return lotes[0];
   });
   return data;
@@ -23,6 +23,7 @@ getByIdRepository = async (id) => {
   let data = await connection().then(async (conn) => {
     const lotes = await conn.execute(`SELECT * FROM ${TABLE} WHERE deletedAt IS NULL AND id = ?`, [id]);
     // console.log( lotes[0]);
+    closeConnection(conn);
     return lotes[0];
   });
   return data;
@@ -35,6 +36,7 @@ postRepository = async (data) => {
     let values = [data.descripcion, data.fecha_inicio, data.fecha_fin, data.folio];
 
     const lotes = await conn.execute(query, values);
+    closeConnection(conn);
     return lotes[0];
   });
   // console.log(response, 'response');
@@ -55,6 +57,7 @@ validacionEntrada = async (data) => {
 
       // console.log(query, 'query');
     const lotes = await conn.execute(query);
+    closeConnection(conn);
     return lotes[0];
   });
   // console.log(response, 'response');
@@ -79,6 +82,7 @@ putRepository = async (data,id) => {
     
     let response = await connection().then(async (conn) => {
       const lotes = await conn.execute(query, values);
+      closeConnection(conn);
       return lotes[0];
     });
     //  console.log(response, 'response');
@@ -102,6 +106,7 @@ deletedRepository = async (data) => {
 
   let response = await connection().then(async (conn) => {
     const lotes = await conn.execute(query);
+    closeConnection(conn);
     return lotes[0];
   });
   //  console.log(response, 'response');

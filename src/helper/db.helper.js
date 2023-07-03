@@ -11,7 +11,7 @@ const dbConfig = {
     port: config.DB_PORT,
 };
 
-    async function connection() {
+    connection = async () => {
         try {
             const connection = await mysql.createConnection(dbConfig);
             console.log('Conexión exitosa a la base de datos');
@@ -22,5 +22,15 @@ const dbConfig = {
           }
     }
 
+    closeConnection = async (connection) => {
+        try {
+            await connection.end();
+            console.log('Conexión cerrada exitosamente');
+          } catch (error) {
+            console.error('Error al cerrar la conexión:', error);
+            throw error;
+          }
+    }
+
     // Verificar la conexión a la base de datos
-module.exports = connection;
+module.exports = {connection, closeConnection};
