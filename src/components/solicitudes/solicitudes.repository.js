@@ -18,17 +18,64 @@ const transporter = nodemailer.createTransport({
 });
 
 
-getAllRepository2 = async (id) => {
+getAllRepository2 = async (id, filters) => {
+
+  let FILTERS = '';
+  // console.log(filters, 'filters');
+  let arryKeys = Object.keys(filters);
+  // console.log(arryKeys, 'arryKeys');
+  if (arryKeys.length != 0) {
+    console.log(filters, 'filters', arryKeys);
+    for (let i = 0; i < arryKeys.length; i++) {
+      if (i == 0) {
+        if (arryKeys[i] === 'like') {
+          FILTERS += `CONCAT (uSolicitud.nombre, ' ', uSolicitud.apellido_p, ' ', uSolicitud.apellido_m) LIKE '%${filters[arryKeys[i]]}%'`
+        }
+        if (arryKeys[i] === 'estatus_id') {
+
+          FILTERS += `s.${arryKeys[i]} = ${filters[arryKeys[i]]}`
+        }
+        if (arryKeys[i] === 'lotes_id') {
+
+          FILTERS += `s.${arryKeys[i]} = ${filters[arryKeys[i]]}`
+        }
+        if (arryKeys[i] === 'carreras_id') {
+          FILTERS += `uSolicitud.${arryKeys[i]} = ${filters[arryKeys[i]]}`
+        }
+
+
+      } else {
+        if (arryKeys[i] === 'like') {
+          FILTERS += ` AND CONCAT (uSolicitud.nombre, ' ', uSolicitud.apellido_p, ' ', uSolicitud.apellido_m) LIKE '%${filters[arryKeys[i]]}%'`
+        }
+        if (arryKeys[i] === 'estatus_id') {
+
+          FILTERS += ` AND s.${arryKeys[i]} = ${filters[arryKeys[i]]}`
+        }
+        if (arryKeys[i] === 'lotes_id') {
+
+          FILTERS += ` AND s.${arryKeys[i]} = ${filters[arryKeys[i]]}`
+        }
+        if (arryKeys[i] === 'carreras_id') {
+          FILTERS += ` AND uSolicitud.${arryKeys[i]} = ${filters[arryKeys[i]]}`
+        }
+
+      }
+    }
+    FILTERS += ' and'
+  }
+
+
   let query = `SELECT
-  CONCAT(u.nombre,
+  CONCAT(uSolicitud.nombre,
           ' ',
-          u.apellido_p,
+          uSolicitud.apellido_p,
           ' ',
-          u.apellido_m) AS nombre_full,
-  u.telefono,
-  u.correo_escolar,
-  u.correo_personal,
-  u.gefe_carrera,
+          uSolicitud.apellido_m) AS nombre_full,
+  uSolicitud.telefono,
+  uSolicitud.correo_escolar,
+  uSolicitud.correo_personal,
+  uSolicitud.gefe_carrera,
   c.descripcion AS descripcion_carreras,
   s.id AS id,
   s.descripcion AS solicitud_descripcion,
@@ -54,8 +101,11 @@ FROM
   estatus AS e ON e.id = s.estatus_id
       INNER JOIN
   lotes AS l ON l.id = s.lotes_id
+      INNER JOIN
+  usuarios AS uSolicitud ON s.usuarios_id = uSolicitud.id
 WHERE
-  u.deletedAt IS NULL
+  ${FILTERS}
+  u.deletedAt IS NULL AND uSolicitud.deletedAt IS NULL 
 AND s.deletedAt IS NULL AND u.id = ${id}
 ; `;
   // console.log(query, 'query');
@@ -158,7 +208,7 @@ aceptadoFinalizar = async (data) => {
       if (data.estado == 0) {
         await actualizarEstatus(6, data.id)
       }
-      
+
     }
   });
 
@@ -326,4 +376,4 @@ deletedRepository = async (data) => {
   return response;
 }
 
-module.exports = { actualizarEstatus,aceptadoFinalizar, aceptadoAdministracion, getAllRepository2, aceptadoComite, getByIdRepository, postRepository, putRepository, deletedRepository };
+module.exports = { actualizarEstatus, aceptadoFinalizar, aceptadoAdministracion, getAllRepository2, aceptadoComite, getByIdRepository, postRepository, putRepository, deletedRepository };

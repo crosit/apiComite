@@ -8,7 +8,7 @@ const URL = '/solicitudes'
 router.get('/',
 passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const response = await controller.getAllController(req.user[0].id);
+    const response = await controller.getAllController(req.user[0].id,req.query);
     res.status(response.status), res.send(response);
   }
 );

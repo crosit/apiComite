@@ -6,7 +6,7 @@ const validacionAdmin = async(req, res, next) => {
     let id = req.user[0].id;
     let usuario = await getByIdRepository(id);
     // Por ejemplo, imprimir el método y la URL de la solicitud
-    if(usuario[0].tipos_id == 1 ){
+    if(usuario[0].tipos_id <= 2 ){
         next();
     }else{
         return res.status(401).json({ message: 'Error de autenticación' });

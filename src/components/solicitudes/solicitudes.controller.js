@@ -13,8 +13,8 @@ const controller = {
         const data = service.aceptadoFinalizarService(req);
         return data;
     },
-    getAllController: (id) => {
-        const data = service.getAllService(id);
+    getAllController: (id,filtros) => {
+        const data = service.getAllService(id,filtros);
         return data;
     },
     getOneController: (usuario,solicitante) => {
