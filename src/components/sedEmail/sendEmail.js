@@ -43,7 +43,14 @@ router.post('/',
                 } else {
                     console.log('Correo electrónico enviado con éxito: ', info.response);
                     if (data.estado == 0) {
-                        await actualizarEstatus(6, data.id)
+                        await actualizarEstatus(5, data.id)
+                        await connection().then(async (conn) => {
+                            console.log(data);
+                            // const usuarios = await conn.execute(`UPDATE ${TABLE} SET estatus_id = 2 WHERE id = ?`, [id]);
+                            let query = `UPDATE solicitudes SET veredicto = '${data.veredicto}' WHERE id = ${data.id}`
+                            const usuarios = await conn.execute(query);
+                            closeConnection(conn);
+                          });
                     }
                     res.status(200), res.send({
                         status: 200,

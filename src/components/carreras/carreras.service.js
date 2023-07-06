@@ -1,9 +1,30 @@
-const {getAllRepository,getByIdRepository,postRepository,putRepository,deletedRepository} = require('./carreras.repository');
+const {getAllRepository,getByIdRepository,postRepository,getAllRepository2,putRepository,deletedRepository} = require('./carreras.repository');
 const service = {
     getAllService: async() => {
         try {
             // Example database query
             let usuarios = await getAllRepository();
+            
+            return {
+                status: 200,
+                data: usuarios,
+                message: 'OK'
+            }
+
+          } catch (error) {
+            console.error('Error getAllService usuarios:', error);
+            return {
+                status: 500,
+                data: null,
+                message: 'error en el servidor register'
+            }
+           
+          }
+    },
+    getAllService2: async() => {
+        try {
+            // Example database query
+            let usuarios = await getAllRepository2();
             
             return {
                 status: 200,

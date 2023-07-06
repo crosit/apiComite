@@ -5,6 +5,10 @@ const controller = {
         const data = service.getAllService();
         return data;
     },
+    getAllController2: () => {
+        const data = service.getAllService2();
+        return data;
+    },
     getOneController: (id) => {
         const data = service.getOneService(id);
         return data;

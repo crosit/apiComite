@@ -8,9 +8,14 @@ const URL = '/auth'
 
 
 router.post('/register', async (req, res) => {
+  
         const response = await controller.getController(req.body);
         res.status(response.status,res), res.send(response);
   });
+  router.post('/register/NewUsuarios', async (req, res) => {
+    const response = await controller.getController2(req.body);
+    res.status(response.status,res), res.send(response);
+});
 
   router.post('/login', async (req, res,next) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {

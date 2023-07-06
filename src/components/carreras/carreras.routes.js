@@ -14,6 +14,13 @@ router.get('/',
     res.status(response.status), res.send(response);
   }
 );
+router.get('/registro',
+  
+  async (req, res) => {
+    const response = await controller.getAllController2();
+    res.status(response.status), res.send(response);
+  }
+);
 
 router.get('/:id',
   passport.authenticate('jwt', { session: false }),

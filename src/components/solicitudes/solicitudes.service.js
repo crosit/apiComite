@@ -74,7 +74,6 @@ const service = {
         try {
             // Example database query
             let usuarios = await postRepository(data, user);
-
             return {
                 status: 200,
                 data: usuarios,

@@ -11,6 +11,14 @@ getAllRepository = async() => {
       });
         return data;
 }
+getAllRepository2 = async() => {
+  let data = await connection().then( async(conn) => {
+      const usuarios = await conn.execute(`SELECT * FROM ${TABLE} WHERE deletedAt IS NULL `);
+      closeConnection(conn);
+      return usuarios[0];
+    });
+      return data;
+}
 
 getByIdRepository = async(id) => {
     // console.log(id, 'id');
@@ -78,4 +86,4 @@ deletedRepository = async(data) => {
    return response;
 }
 
-module.exports = {getAllRepository, getByIdRepository, postRepository, putRepository, deletedRepository};
+module.exports = {getAllRepository, getByIdRepository, getAllRepository2,postRepository, putRepository, deletedRepository};

@@ -82,6 +82,7 @@ getAllRepository2 = async (id, filters) => {
   s.createdAt AS solicitudes_createdAt,
   s.usuarios_id AS solicitudes_usuarios_id,
   s.comentario AS solicitudes_comentario,
+  s.veredicto AS veredicto,
   e.id AS estatus_id,
   e.descripcion AS descripcion_estatus,
   l.id AS lotes_id,
@@ -107,7 +108,7 @@ WHERE
   ${FILTERS}
   u.deletedAt IS NULL AND uSolicitud.deletedAt IS NULL 
 AND s.deletedAt IS NULL AND u.id = ${id}
-; `;
+ORDER BY id desc; `;
   // console.log(query, 'query');
   let data = await connection().then(async (conn) => {
     const usuarios = await conn.execute(query);
@@ -133,7 +134,7 @@ getByIdRepository = async (usuario, usuariosSolicitudId) => {
 }
 
 aceptadoComite = async (data) => {
-  // console.log(data, 'data');
+  console.log(data, 'data2');
   let id = data.id;
   // console.log(id, 'id');
   let usuarios = await validacionComite()
@@ -148,9 +149,8 @@ aceptadoComite = async (data) => {
   }
   console.log(data, 'data');
   let response = await connection().then(async (conn) => {
-    let query = `UPDATE ${TABLE} SET comentario = '${data.comentario_comite}' WHERE id = ${id}`
-    // console.log(query, 'query');
-    await conn.execute(query);
+    console.log(data, 'dataComentario');
+    
     const usuarios = await actualizarEstatus(2, data.id)
     closeConnection(conn);
     return usuarios[0];
@@ -163,8 +163,12 @@ aceptadoAdministracion = async (data) => {
   // console.log(id, 'id');
   let usuarios = await validacionAdministracion()
   //  console.log(usuarios, 'usuarios');
+  console.log(data, 'data');
   await connection().then(async (conn) => {
     // const usuarios = await conn.execute(`UPDATE ${TABLE} SET estatus_id = 2 WHERE id = ?`, [id]);
+    let query = `UPDATE ${TABLE} SET comentario = '${data.comentario_comite}' WHERE id = ${id}`
+    // console.log(query, 'query');
+    await conn.execute(query);
     const usuarios = actualizarEstatus(4, data.id)
     closeConnection(conn);
     return usuarios[0];
@@ -191,6 +195,14 @@ aceptadoFinalizar = async (data) => {
   // console.log(data, 'data');
   let id = data.id;
   actualizarEstatus(5, id);
+  await connection().then(async (conn) => {
+    // const usuarios = await conn.execute(`UPDATE ${TABLE} SET estatus_id = 2 WHERE id = ?`, [id]);
+    let query = `UPDATE ${TABLE} SET veredicto = '${data.veredicto}' WHERE id = ${id}`
+    console.log(query, 'query');
+    const usuarios = await conn.execute(query);
+    closeConnection(conn);
+    return usuarios[0];
+  });
 
   const mailOptions = {
     from: config.MAIL_USER,
@@ -206,7 +218,7 @@ aceptadoFinalizar = async (data) => {
     } else {
       console.log('Correo electrónico enviado con éxito: ', info.response);
       if (data.estado == 0) {
-        await actualizarEstatus(6, data.id)
+        await actualizarEstatus(5, data.id)
       }
 
     }
@@ -243,6 +255,7 @@ seleccionarSolicitudesPorUsuario = async (usuarioId, alumnoId) => {
   s.createdAt AS solicitudes_createdAt,
   s.usuarios_id AS solicitudes_usuarios_id,
   s.comentario AS solicitudes_comentario,
+  s.veredicto AS veredicto,
   e.id AS estatus_id,
   e.descripcion AS descripcion_estatus,
   l.id AS lotes_id,
@@ -267,7 +280,7 @@ FROM
 WHERE
   u.deletedAt IS NULL
 AND s.deletedAt IS NULL AND s.usuarios_id = ${alumnoId}  AND cu.usuarios_id = ${usuarioId}
-;`
+ORDER BY id desc;`
   // console.log(query, 'query');
 
   let data = await connection().then(async (conn) => {
@@ -290,6 +303,7 @@ AND s.deletedAt IS NULL AND s.usuarios_id = ${alumnoId}  AND cu.usuarios_id = ${
 }
 
 postRepository = async (data, user) => {
+  console.log(data, 'datasolicitud');
   let lote = await getAllRepository(data);
   if (lote.length == 0) {
     return {
@@ -307,8 +321,8 @@ postRepository = async (data, user) => {
     solicitudes_id: response.insertId
   }
   // console.log(userSolicitud, 'userSolicitud');
-  postRepositoryUS(userSolicitud);
-  postRepositoryDocument(data);
+  await postRepositoryUS(userSolicitud);
+  await postRepositoryDocument(data);
   let usuario = await validacionGefeCarrera(response.insertId, user[0].carreras_id);
   // console.log(usuario, 'usuario');
   let gefeSolicitud = {
@@ -329,6 +343,7 @@ insertSolicitud = async (data, lote, user) => {
     closeConnection(conn);
     return usuarios[0];
   });
+  //  console.log(response, 'response');
   return response;
 }
 
